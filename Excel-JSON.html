@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Read Excel</title>
+    <script src="https://unpkg.com/read-excel-file@4.1.0/bundle/read-excel-file.min.js"></script>
+</head>
+<body>
+    <div style="margin: auto; width: 50%; margin-top: 80px; padding: 30px; background-color: #dedede;">
+        <h2>EXCEL to JSON Converter</h2>
+        <input type="file" id="input" />
+        <br> <br>
+        <textarea name="json-data" id="json-data" rows="25" style="width: 100%;"></textarea>
+        <br><br>
+        <button id="dl-json">Download JSON Files</button>
+    </div>
+    
+    <script>
+        var input = document.getElementById('input');
+        input.addEventListener('change', function() {
+            readXlsxFile(input.files[0]).then(function(data) {
+                var i = 0;
+                var headers = [];
+                var json_object = [];
+
+                data.map((row, index) => {
+                    if (i === 0) {
+                        headers = row;
+                    }
+
+                    if (i > 0) {
+                        var temp = {};
+                        for (var x = 0; x < row.length; x++) {
+                            temp[headers[x]] = row[x];
+                        }
+                        json_object.push(temp);
+                    }
+                    i++;
+                });
+
+                document.getElementById('json-data').value = JSON.stringify(json_object, null, 2);
+            });
+        });
+    </script>
+</body>
+</html>
